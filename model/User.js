@@ -12,7 +12,8 @@ const userSchema = Schema({
 
     password:{
         type:String,
-        required:[true, 'a password is required.']
+        required:[true, 'a password is required.'],
+        select:false
     },
 
     dateJoined:{
