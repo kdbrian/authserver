@@ -3,7 +3,6 @@ const express = require('express');
 const mongoose = require('mongoose')
 const AuthRouter = require('./Routes')
 const app = express()
-const {exec} =require('child_process')
 const ErrorHandler = require('./util/GlobalErrorController')
 
 //connect to db
@@ -30,17 +29,6 @@ app.use(ErrorHandler)
 
 const PORT = process.env.PORT || 3030
 
-function startNgrok() {
-    exec(`ngrok http ${PORT}`, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Error starting ngrok: ${error}`);
-        return;
-      }
-      console.log(`Ngrok started:\n${stdout}`);
-    });
-  }
-
 app.listen(PORT, ()=>{
     console.log(`server started at port ${PORT}`);
-    // startNgrok();
 })

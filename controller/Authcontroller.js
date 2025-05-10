@@ -1,12 +1,12 @@
 const userModel = require('../model/User')
-const sessionModel = require('../model/Sessions')
+//const sessionModel = require('../model/Sessions')
 
 exports.register = async (req, res, next) =>{
 
-    const {username, password}  = req.body
+    const {email, password}  = req.body
 
     try {
-        const user = await userModel.create({username,password})
+        const user = await userModel.create({email,password}).select("- password")
 
         res.status(200).json({
             success:true,
@@ -14,7 +14,7 @@ exports.register = async (req, res, next) =>{
         })
 
     }catch(err){
-        console.log(err);
+        //console.log(err);
         // next(err)
         res.status(400).json({
             success:false,
@@ -35,20 +35,20 @@ exports.login = async(req, res,next) =>{
                 message:`Invalid username or password`
             });
 
-        let token;
+        //let token;
 
         // chec if user session exists
-        const session = await sessionModel.findOne({user: user._id})
+        //const session = await sessionModel.findOne({user: user._id})
 
-        if (!session){
-            token = user.createJWT();
-            await sessionModel.create({user: user._id, sessionToken:token});
-        }
-        else{
-            token = session.sessionToken
-            // increse session by 3 houts
-            session.timeToLive = new Date(Date.now() + 3 * 60 * 60 * 1000);
-        }
+        // if (!session){
+        let token = user.createJWT();
+        //     await sessionModel.create({user: user._id, sessionToken:token});
+        // }
+        // else{
+        //     token = session.sessionToken
+        //     // increse session by 3 houts
+        //     session.timeToLive = new Date(Date.now() + 3 * 60 * 60 * 1000);
+        // }
 
         res.status(200).json({
             success:true,

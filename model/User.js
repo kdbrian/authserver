@@ -3,23 +3,56 @@ const jwt = require('jsonwebtoken')
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
 
-const userSchema = Schema({
-    username:{
-        type:String,
-        required:true,
-        unique:[true, 'username already taken.']
+const userSchema = new Schema({
+    email: {
+        type: String,
+        required: true,
+        unique: [true, 'Email already taken.']
     },
 
-    password:{
-        type:String,
-        required:[true, 'a password is required.'],
-        select:false
+    phone: {
+        type: String,
+        required: false,
+        unique: [true, 'Phone number already taken.'],
+        validate: {
+            validator: function(v) {
+                // Kenyan phone number format: +2547XXXXXXXX or 07XXXXXXXX
+                return /^(\+254|0)7\d{8}$/.test(v);
+            },
+            message: props => `${props.value} is not a valid Kenyan phone number.`
+        }
     },
 
-    dateJoined:{
-        type:Date,
-        default:Date.now()
+    password: {
+        type: String,
+        required: [true, 'A password is required.'],
+        select: false
+    },
+
+    avatarUrl: {
+        type: String
+    },
+
+    dateJoined: {
+        type: Date,
+        default: Date.now
+    },
+
+    dateUpdated: {
+        type: Date
+    },
+
+    isActive: {
+        type: Boolean,
+        default: true
     }
+});
+
+
+// Update `dateUpdated` on document updates
+userSchema.pre('findOneAndUpdate', function(next) {
+    this.set({ dateUpdated: new Date() });
+    next();
 });
 
 /***
