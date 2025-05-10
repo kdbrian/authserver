@@ -16,8 +16,8 @@ const userSchema = new Schema({
         unique: [true, 'Phone number already taken.'],
         validate: {
             validator: function(v) {
-                // Kenyan phone number format: +2547XXXXXXXX or 07XXXXXXXX
-                return /^(\+254|0)7\d{8}$/.test(v);
+                // Matches: 07XXXXXXXX, 01XXXXXXXX, +2547XXXXXXXX, +2541XXXXXXXX, 2547XXXXXXXX, 2541XXXXXXXX
+                return /^(?:\+?254|0)(1|7)\d{8}$/.test(v);
             },
             message: props => `${props.value} is not a valid Kenyan phone number.`
         }

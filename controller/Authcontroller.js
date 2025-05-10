@@ -3,23 +3,23 @@ const userModel = require('../model/User')
 
 exports.register = async (req, res, next) =>{
 
-    const {email, password}  = req.body
+    const {email, password, phone}  = req.body
 
     try {
-        const user = await userModel.create({email,password}).select("- password")
-
+        const user = await userModel.create({email,password, phone})
+        const cleanUser = await userModel.findById(user._id).select('-password');
         res.status(200).json({
             success:true,
-            user
+            user:cleanUser
         })
 
     }catch(err){
         //console.log(err);
-        // next(err)
-        res.status(400).json({
-            success:false,
-            message:`Account creation failed due to ${err}`
-        })
+         next(err)
+        // res.status(400).json({
+            // success:false,
+            // message:`Account creation failed due to ${err}`
+        // })
     }
 }
 
